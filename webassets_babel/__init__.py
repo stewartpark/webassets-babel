@@ -33,11 +33,8 @@ class BabelFilter(Filter):
     }
 
     def input(self, _in, out, **kwargs):
-        input_filename = tempfile.mktemp() + "-babel.js"
+        input_filename = kwargs['source_path']
         output_filename = tempfile.mktemp() + ".js"
-
-        with open(input_filename, 'w') as f:
-            f.write(_in.getvalue())
 
         proc = subprocess.Popen(
             self.get_executable_list(input_filename, output_filename),
@@ -54,7 +51,6 @@ class BabelFilter(Filter):
         with open(output_filename, 'r') as f:
             out.write(f.read())
 
-        os.unlink(input_filename)
         os.unlink(output_filename)
 
     def get_executable_list(self, input_filename, output_filename):
